@@ -1,3 +1,4 @@
+# Author: Everton Albuquerque de Oliveira
 GCC = g++
 PROG = test
 

@@ -1,3 +1,5 @@
+// main.cpp
+// Author: Everton Albuquerque de Oliveira
 #include <iostream>
 
 int main(int argc, char* argv[]){
