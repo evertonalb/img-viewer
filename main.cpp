@@ -8,10 +8,18 @@
 int next_byte(FILE* fp, unsigned char& byte);
 
 int main(int argc, char* argv[]){
-    FILE* fp = fopen("foo", "r");
+    FILE* fp = fopen("huff_simple0.jpg", "r");
+
     unsigned char byte;
-    next_byte(fp, byte);
-    fprintf(stdout, "%02x\n", byte);
+    while (next_byte(fp, byte)){
+        if (byte == 0xff){
+            next_byte(fp, byte);
+            if (byte != 0x00)
+                fprintf(stdout, "Spotted marker 0xff%02x.\n", byte);
+        }
+    }
+
+    fprintf(stdout, "End of image!\n");
     return 0;
 }
 
