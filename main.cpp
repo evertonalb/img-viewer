@@ -1,7 +1,7 @@
 // main.cpp
 // Author: Everton Albuquerque de Oliveira
-#include <iostream>
 #include <cstdio>
+#include <vector>
 
 // Saves next byte of fp into "byte".
 // Returns 0 if the file ended and 1 otherwise.
@@ -9,6 +9,9 @@ int next_byte(FILE* fp, unsigned char& byte);
 
 int main(int argc, char* argv[]){
     FILE* fp = fopen("examples/colored_8x8.jpg", "r");
+
+    // Huffman table vector
+    // TODO: Create Huffman table structure
 
     // Detect markers
     unsigned char byte;
