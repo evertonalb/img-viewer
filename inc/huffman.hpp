@@ -8,12 +8,17 @@
 // TODO: Implement function that fill up HUFFSIZE and HUFFCODE
 class HuffmanTable {
 public:
-    vector<int> huffsize;
-    vector<unsigned char> huffcode;
+    int n;
+    std::vector<int> huffsize;
+    std::vector<unsigned char> huffcode;
     unsigned short int bits[17];
 
+    HuffmanTable();
     HuffmanTable(int numEntries);
-}
+    HuffmanTable(const HuffmanTable& that);
+
+    HuffmanTable& operator=(const HuffmanTable& that);
+};
 
 /** The DHT segment consists of:
  * DHT marker (0xffc4)
@@ -30,3 +35,4 @@ public:
  *
  * HUFFVAL
  * Finally, the values (symbols) Vi,j
+ */
