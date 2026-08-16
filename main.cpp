@@ -2,10 +2,7 @@
 // Author: Everton Albuquerque de Oliveira
 #include <cstdio>
 #include <vector>
-
-// Saves next byte of fp into "byte".
-// Returns 0 if the file ended and 1 otherwise.
-int next_byte(FILE* fp, unsigned char& byte);
+#include "util.hpp"
 
 int main(int argc, char* argv[]){
     FILE* fp = fopen("examples/colored_8x8.jpg", "r");
@@ -30,6 +27,10 @@ int main(int argc, char* argv[]){
                 case 0xda:
                     fprintf(stdout, "Start-of-scan marker.\n");
                     break;
+                case 0xc4:
+                    fprintf(stdout, "Define Huffman Table marker.\n");
+                    // TODO: Call function to read segment
+                    break;
                 default:
                     fprintf(stdout, "This marker has not been implemented yet.\n");
                     break;
@@ -40,12 +41,4 @@ int main(int argc, char* argv[]){
 
     fprintf(stdout, "End of image!\n");
     return 0;
-}
-
-int next_byte(FILE* fp, unsigned char& byte){
-    char buffer[2];
-    if (fgets(buffer, 2, fp)){
-        byte = buffer[0];
-        return 1;
-    } else return 0;
 }
