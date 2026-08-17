@@ -8,13 +8,14 @@
 // TODO: Implement function that fill up HUFFSIZE and HUFFCODE
 class HuffmanTable {
 public:
-    int n;
+    int n, tc;
     std::vector<int> huffsize;
     std::vector<unsigned char> huffcode;
+    std::vector<unsigned char> huffval;
     unsigned short int bits[17];
 
     HuffmanTable();
-    HuffmanTable(int numEntries);
+    HuffmanTable(int numEntries, int Tc);
     HuffmanTable(const HuffmanTable& that);
 
     HuffmanTable& operator=(const HuffmanTable& that);

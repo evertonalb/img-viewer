@@ -11,9 +11,11 @@ public:
     FILE* fp;
 
     Image(const char* filename);
-    
     Image(const Image& other);
 
     Image& operator=(const Image& other);
+
+    void read_dht_segment();
+
     ~Image();
 };

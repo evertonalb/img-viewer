@@ -5,6 +5,17 @@ ITU-T T.81 standard.
 ## Marker
 The marker Define Huffman Table (DHT) is 0xFFC4, and it is the first thing in the Huffman table definition.
 
+## Lh, and Tc|Th
+After the marker there are two bytes that correspond to Lh, the length\
+of the segment in bytes, excluding DHT but including Lh.
+This is followed by one byte that indicates Tc (4 most significant bits)\
+and Th (4 least significant bits). Tc is the table class (0 for DC or lossless\
+and 1 for AC and DC are the different components of DCT), and Th is the table\
+destination. When decoding the actual image data, the encryption will have\
+used one of up to four different tables. Each table is assigned a code\
+(0 through 3) so that the scan header can indicate properly which table\
+should be used for decryption.
+
 ## BITS
 It is followed by the BITS list, a list of 16 bytes telling us how many symbols are there that correspond\
 to each possible code length:
@@ -14,7 +25,8 @@ L1 - L2 - L3 - L4 - ... - L16
 Where Li is one byte meaning that there are Li codes with i bits.
 
 ## HUFFVAL
-After the BITS list we have HUFFVAL, which is a list of all symbols with an associated huffman code.
+After the BITS list we have HUFFVAL, which is a list of all symbols with an associated huffman code.\
+One symbol = One byte
 
 ## Decoding algorithm
 With BITS and HUFFVAL we produce two tables (arrays, really): HUFFSIZE and HUFFCODE. HUFFSIZE has a list of code lengths\

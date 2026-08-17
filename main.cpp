@@ -30,7 +30,7 @@ int main(int argc, char* argv[]){
                     break;
                 case 0xc4:
                     fprintf(stdout, "Define Huffman Table marker.\n");
-                    // TODO: Call function to read segment
+                    img.read_dht_segment();
                     break;
                 default:
                     fprintf(stdout, "This marker has not been implemented yet.\n");
