@@ -6,6 +6,10 @@
 Image::Image(const char* filename){
     this->filename = strdup(filename);
     this->fp = fopen(filename, "r");
+    if (!fp){
+        fprintf(stderr, "File \'%s\' not found.\n", filename);
+        exit(EXIT_FAILURE);
+    }
 }
 
 // Copy constructor
