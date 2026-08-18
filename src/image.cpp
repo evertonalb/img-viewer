@@ -100,6 +100,56 @@ void Image::read_huffval(int th){
     }
 }
 
+void Image::read_dqt_segment(){
+    unsigned char byte;
+
+    // Lq, length
+    int lq;
+    if (!next_two_bytes(this->fp, lq)){
+        fprintf(stderr, "File corrupted.\n");
+        exit(EXIT_FAILURE);
+    }
+    printf("Lq %d\n", lq);
+
+    int byte_count = 2;
+    while (byte_count < lq){
+        // Pq | Tq
+        int pq, tq;
+        if (!next_byte(this->fp, byte)){
+            fprintf(stderr, "File corrupted.\n");
+            exit(EXIT_FAILURE);
+        }
+        pq = (byte & 0xf0) >> 4;
+        tq =  byte & 0x0f;
+
+        read_qtable(pq, tq);
+        byte_count += 65;
+    }
+}
+
+void Image::read_qtable(int pq, int tq){
+    unsigned char byte;
+    for (int i = 0; i < 64; i++){
+        if (!next_byte(this->fp, byte)){
+            fprintf(stderr, "File corrupted.\n");
+            exit(EXIT_FAILURE);
+        }
+        q[tq][i] = (unsigned int) byte;
+
+        if (pq == 1){
+            // 16bit precision
+            if (!next_byte(this->fp, byte)){
+                fprintf(stderr, "File corrupted.\n");
+                exit(EXIT_FAILURE);
+            }
+            q[tq][i] = (q[tq][i] << 8) | byte;
+        }
+
+        printf("%02d ", q[tq][i]);
+        if (i%8 == 7) printf("\n");
+    }
+}
+
 Image::~Image(){
     fclose(fp);
     free(filename);

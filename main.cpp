@@ -7,7 +7,7 @@
 
 int main(int argc, char* argv[]){
 
-    Image img("examples/huff_simple0.jpg");
+    Image img("examples/colored_8x8.jpg");
 
     // Detect markers
     unsigned char byte;
@@ -17,6 +17,10 @@ int main(int argc, char* argv[]){
             if (byte != 0x00){
                 fprintf(stdout, "Spotted marker 0xff%02x.\n", byte);
                 switch (byte){
+                case 0xc4:
+                    fprintf(stdout, "Define Huffman Table marker.\n");
+                    img.read_dht_segment();
+                    break;
                 case 0xd8:
                     fprintf(stdout, "Start-of-image marker.\n");
                     break;
@@ -26,9 +30,9 @@ int main(int argc, char* argv[]){
                 case 0xda:
                     fprintf(stdout, "Start-of-scan marker.\n");
                     break;
-                case 0xc4:
-                    fprintf(stdout, "Define Huffman Table marker.\n");
-                    img.read_dht_segment();
+                case 0xdb:
+                    fprintf(stdout, "Define Quantization Table marker.\n");
+                    img.read_dqt_segment();
                     break;
                 default:
                     fprintf(stdout, "This marker has not been implemented yet.\n");
