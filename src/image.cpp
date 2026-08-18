@@ -1,5 +1,6 @@
 #include "image.hpp"
 #include "util.hpp"
+#include <cstdlib>
 #include <cstring>
 
 Image::Image(const char* filename){
@@ -26,45 +27,77 @@ Image& Image::operator=(const Image& that){
 void Image::read_dht_segment(){
     unsigned char byte;
 
-    fprintf(stdout, "-------------------------\n");
     // Lh
     int lh = 0;
-    next_byte(this->fp, byte);
-    lh = byte<<8;
-    next_byte(this->fp, byte);
-    lh |= byte;
-    fprintf(stdout, "Lh is %d\n", lh);
 
-    // Tc and Th
-    int tc, th;
-    next_byte(this->fp, byte);
-    tc = (byte & 0xf0) >> 4; // 4 MSB
-    th = byte & 0x0f;        // 4 LSB
-    fprintf(stdout, "Tc is %d and Th is %d\n", tc, th);
-
-    // Instantiate HuffmanTable
-    this->huffmanTable[th] = HuffmanTable(lh - 19, tc); // Lh - 16 (BITS) - 3 (Lh and Tc|Th)
-
-    // Read in the BITS list
-    for (int i = 1; i <= 16; i++){
-        next_byte(this->fp, byte);
-        huffmanTable[th].bits[i] = byte;
+    if (!next_byte(this->fp, byte)){
+        fprintf(stderr, "File corrupted.\n");
+        exit(EXIT_FAILURE);
     }
 
-    fprintf(stdout, "Printing BITS:\n");
-    for (int i = 1; i <= 16; i++)
-        fprintf(stdout, "Bits[%d] - %d\n", i, huffmanTable[th].bits[i]);
+    lh = byte<<8;
 
-    // Read in HUFFVAL
+    if (!next_byte(this->fp, byte)){
+        fprintf(stderr, "File corrupted.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    lh |= byte;
+
+    int byte_count = 2;
+    while (byte_count < lh){
+        // Tc and Th
+        int tc, th;
+
+        if (!next_byte(this->fp, byte)){
+            fprintf(stderr, "File corrupted.\n");
+            exit(EXIT_FAILURE);
+        }
+
+        byte_count++;
+        tc = (byte & 0xf0) >> 4; // 4 MSB
+        th = byte & 0x0f;        // 4 LSB
+
+        // Instantiate HuffmanTable
+        this->huffmanTable[th] = HuffmanTable(tc);
+
+        // Read in the BITS list
+        read_bits(th);
+        byte_count += 16;
+
+        // Read in HUFFVAL
+        read_huffval(th);
+        byte_count += huffmanTable[th].n;
+    }
+}
+
+void Image::read_bits(int th){
+    unsigned char byte;
+    int sz = 0;
+    for (int i = 1; i <= 16; i++){
+
+        if (!next_byte(this->fp, byte)){
+            fprintf(stderr, "File corrupted.\n");
+            exit(EXIT_FAILURE);
+        }
+
+        huffmanTable[th].bits[i] = byte;
+        sz += byte;
+    }
+    huffmanTable[th].n = sz;
+}
+
+void Image::read_huffval(int th){
+    unsigned char byte;
     for (int i = 0; i < huffmanTable[th].n; i++){
-        next_byte(this->fp, byte);
+
+        if (!next_byte(this->fp, byte)){
+            fprintf(stderr, "File corrupted.\n");
+            exit(EXIT_FAILURE);
+        }
+
         huffmanTable[th].huffval.push_back(byte);
     }
-
-    for (auto x : huffmanTable[th].huffval)
-        fprintf(stdout, "%02x - ", x);
-
-    fprintf(stdout, "\n-------------------------\n");
 }
 
 Image::~Image(){

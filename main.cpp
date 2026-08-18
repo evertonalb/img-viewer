@@ -2,14 +2,12 @@
 // Author: Everton Albuquerque de Oliveira
 // Aug 16, 2026
 #include <cstdio>
-#include <vector>
 #include "util.hpp"
 #include "image.hpp"
-#include "huffman.hpp"
 
 int main(int argc, char* argv[]){
 
-    Image img("examples/colored_8x8.jpg");
+    Image img("examples/huff_simple0.jpg");
 
     // Detect markers
     unsigned char byte;

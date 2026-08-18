@@ -1,14 +1,7 @@
 #include "huffman.hpp"
 
-HuffmanTable::HuffmanTable(){
-    HuffmanTable(0, 0);
-}
-
-HuffmanTable::HuffmanTable(int numEntries, int Tc) : n(numEntries), tc(Tc) {
-    huffsize.resize(numEntries);
-    huffcode.resize(numEntries);
-    for (int i = 1; i <= 16; i++) bits[i] = 0;
-}
+HuffmanTable::HuffmanTable() : tc(-1) {}
+HuffmanTable::HuffmanTable(int Tc) : tc(Tc) {}
 
 // Copy constructor
 HuffmanTable::HuffmanTable(const HuffmanTable& that){

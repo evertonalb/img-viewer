@@ -15,7 +15,7 @@ public:
     unsigned short int bits[17];
 
     HuffmanTable();
-    HuffmanTable(int numEntries, int Tc);
+    HuffmanTable(int tc);
     HuffmanTable(const HuffmanTable& that);
 
     HuffmanTable& operator=(const HuffmanTable& that);
