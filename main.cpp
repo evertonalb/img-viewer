@@ -2,12 +2,17 @@
 // Author: Everton Albuquerque de Oliveira
 // Aug 16, 2026
 #include <cstdio>
+#include <cstdlib>
 #include "util.hpp"
 #include "image.hpp"
 
 int main(int argc, char* argv[]){
-
-    Image img("examples/colored_8x8.jpg");
+    
+    if (argc != 2){
+        fprintf(stderr, "Usage: %s [filename]\n", argv[0]);
+        return EXIT_FAILURE;
+    }
+    Image img(argv[1]);
 
     // Detect markers
     unsigned char byte;
